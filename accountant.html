@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Control</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f0f2f5; }
+        .card { background: white; padding: 20px; border-radius: 12px; max-width: 500px; margin: 10px auto; }
+        button { width: 100%; padding: 12px; margin-top: 10px; cursor: pointer; border-radius: 8px; border: none; background: #6a1b9a; color: white; font-weight: bold; }
+        textarea { width: 100%; border-radius: 8px; padding: 10px; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h3>📢 Update Campus News</h3>
+        <textarea id="newsContent" rows="3"></textarea>
+        <button onclick="updateNews()" style="background: #2c3e50;">UPDATE NEWS</button>
+    </div>
+
+    <div class="card">
+        <h3>💳 Student Finance</h3>
+        <input id="searchId" style="width:70%; padding:10px;" placeholder="Student ID">
+        <button onclick="search()" style="width:25%; display:inline-block; margin:0;">GO</button>
+        <div id="res" style="display:none; margin-top:20px;">
+            <p id="name"></p>
+            <h2 id="bal"></h2>
+            <button id="clearBtn" onclick="toggleStatus()"></button>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "PASTE_YOUR_DEPLOY_URL_HERE";
+        async function updateNews() {
+            const news = document.getElementById('newsContent').value;
+            await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'update_news', news: news }) });
+            alert("Updated!");
+        }
+        // Include your search and toggle functions here
+    </script>
+</body>
+</html>

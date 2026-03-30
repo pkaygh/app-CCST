@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CCST Smart Portal</title>
+    <style>
+        :root { --primary: #004080; --bg: #f4f6f9; --staff: #6a1b9a; }
+        body { margin: 0; font-family: sans-serif; background: var(--bg); }
+        input { font-size: 16px !important; width: 100%; padding: 12px; margin: 10px 0; box-sizing: border-box; border-radius: 8px; border: 1px solid #ccc; }
+        button { width: 100%; padding: 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; color: white; margin: 5px 0; }
+        .hidden { display: none; }
+        .container { padding: 20px; max-width: 500px; margin: auto; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; }
+    </style>
+</head>
+<body>
+    <div id="loginPage" class="container">
+        <div class="card">
+            <h2 id="title">Student Login</h2>
+            <input id="userId" placeholder="ID / Username">
+            <input id="userPass" type="password" placeholder="Password">
+            <div id="studentBox">
+                <button onclick="login()" style="background: var(--primary);">LOGIN</button>
+            </div>
+            <div id="staffBox" class="hidden">
+                <button onclick="staffLogin()" style="background: var(--staff);">STAFF LOGIN</button>
+            </div>
+            <p onclick="toggleMode()" style="cursor:pointer; font-size: 0.8rem; color: #666;">Switch Login Mode</p>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "PASTE_YOUR_DEPLOY_URL_HERE";
+        let isStaff = false;
+
+        function toggleMode() {
+            isStaff = !isStaff;
+            document.getElementById('title').innerText = isStaff ? "Staff Portal" : "Student Login";
+            document.getElementById('studentBox').classList.toggle('hidden', isStaff);
+            document.getElementById('staffBox').classList.toggle('hidden', !isStaff);
+        }
+
+        function staffLogin() {
+            if(document.getElementById('userId').value === "admin" && document.getElementById('userPass').value === "ccst2026") {
+                window.location.href = "accountant.html";
+            } else { alert("Wrong Credentials"); }
+        }
+
+        async function login() {
+            // Your existing hash and fetch logic here
+        }
+    </script>
+</body>
+</html>
