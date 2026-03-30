@@ -3,40 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Control</title>
+    <title>Accountant Tool | CCST</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #f0f2f5; }
-        .card { background: white; padding: 20px; border-radius: 12px; max-width: 500px; margin: 10px auto; }
-        button { width: 100%; padding: 12px; margin-top: 10px; cursor: pointer; border-radius: 8px; border: none; background: #6a1b9a; color: white; font-weight: bold; }
-        textarea { width: 100%; border-radius: 8px; padding: 10px; box-sizing: border-box; }
+        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; }
+        .card { background: white; padding: 25px; border-radius: 12px; max-width: 450px; margin: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; }
+        input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; }
+        button { background: #004080; color: white; border: none; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h3>📢 Update Campus News</h3>
-        <textarea id="newsContent" rows="3"></textarea>
-        <button onclick="updateNews()" style="background: #2c3e50;">UPDATE NEWS</button>
-    </div>
 
-    <div class="card">
-        <h3>💳 Student Finance</h3>
-        <input id="searchId" style="width:70%; padding:10px;" placeholder="Student ID">
-        <button onclick="search()" style="width:25%; display:inline-block; margin:0;">GO</button>
-        <div id="res" style="display:none; margin-top:20px;">
-            <p id="name"></p>
-            <h2 id="bal"></h2>
-            <button id="clearBtn" onclick="toggleStatus()"></button>
-        </div>
-    </div>
+<div class="card">
+    <h2 style="color: #004080;">Finance Control</h2>
+    <input id="searchId" placeholder="Enter Student ID">
+    <button onclick="search()">SEARCH STUDENT</button>
 
-    <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvzFwfoMFlWMJqsAKMZ0nCpUjRunmBu0Ih2l39v-z-uYK-D9jurtUM5a7iOy32s6ba5g/exec";
-        async function updateNews() {
-            const news = document.getElementById('newsContent').value;
-            await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'update_news', news: news }) });
-            alert("Updated!");
-        }
-        // Include your search and toggle functions here
-    </script>
+    <div id="result" style="display:none; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+        <h3 id="resName"></h3>
+        <p id="resInfo"></p>
+        <h2 id="resBal" style="color: #e74c3c;"></h2>
+        <button id="toggleBtn" onclick="toggleStatus()"></button>
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzu4S8q-_dXggYWq7D8aNbiWwdXlJoZiZZz09ASKfe1yxJWW-S3Ef0ddpvm1OdjUa9qkA/exec";
+    let currentStudent = null;
+
+    async function search() {
+        const id = document.getElementById('searchId').value.trim();
+        if(!id) return;
+        const res = await fetch(`${SCRIPT_URL}?action=accountant_search&id=${id}`);
+        const data = await res.json();
+        if(data.error) return alert(data.error);
+        
+        currentStudent = data;
+        document.getElementById('result').style.display = 'block';
+        document.getElementById('resName').innerText = data.name;
+        document.getElementById('resInfo').innerText = `${data.program} | Level ${data.level}`;
+        document.getElementById('resBal').innerText = "Balance: GHC " + data.balance;
+        updateUI(data.isCleared);
+    }
+
+    function updateUI(s) {
+        const btn = document.getElementById('toggleBtn');
+        btn.innerText = s ? "✅ CLEARED" : "❌ NOT CLEARED";
+        btn.style.background = s ? "#27ae60" : "#e74c3c";
+    }
+
+    async function toggleStatus() {
+        const status = !currentStudent.isCleared;
+        await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'toggle_clearance', id: currentStudent.id, status })});
+        currentStudent.isCleared = status;
+        updateUI(status);
+        alert("Status Updated!");
+    }
+</script>
 </body>
 </html>
