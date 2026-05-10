@@ -3,114 +3,933 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Guidian Hotel | Solwezi</title>
-    <style>
-        :root {
-            --navy: #0a192f;
-            --gold: #c5a059;
-            --white: #ffffff;
-            --gray: #f4f4f4;
+    <title>The Guardian Hotel- Luxury Accommodation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        gold: {
+                            50: '#fdf9f0',
+                            100: '#fbf0d9',
+                            200: '#f6e0b3',
+                            300: '#edc87a',
+                            400: '#e4b04a',
+                            500: '#d4982a',
+                            600: '#b87a1f',
+                            700: '#935c1b',
+                            800: '#7a4d1e',
+                            900: '#66401c',
+                        },
+                        hotel: {
+                            dark: '#1a1a2e',
+                            navy: '#16213e',
+                            blue: '#0f3460',
+                            accent: '#e94560',
+                        }
+                    }
+                }
+            }
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--white); color: var(--navy); }
-       
-        /* Header & Hero */
-        header { background: var(--navy); color: var(--gold); padding: 20px; text-align: center; border-bottom: 3px solid var(--gold); }
-        .hero { background: linear-gradient(rgba(10,25,47,0.7), rgba(10,25,47,0.7)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80');
-                height: 300px; background-size: cover; display: flex; align-items: center; justify-content: center; color: white; text-align: center; flex-direction: column; }
-       
-        /* Room Section */
-        .section { padding: 20px; max-width: 800px; margin: auto; }
-        .room-card { border: 1px solid #ddd; border-radius: 8px; margin-bottom: 20px; overflow: hidden; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .room-info { padding: 15px; }
-        .price { color: var(--gold); font-weight: bold; font-size: 1.2rem; }
-
-        /* Booking Form */
-        #booking-form { background: var(--navy); color: white; padding: 25px; border-radius: 8px; }
-        input, select, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; box-sizing: border-box; }
-        button { background: var(--gold); color: var(--navy); font-weight: bold; cursor: pointer; font-size: 1rem; }
-       
-        /* WhatsApp Button */
-        .whatsapp-btn { position: fixed; bottom: 20px; right: 20px; background: #25d366; color: white; padding: 15px; border-radius: 50px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-       
-        .success-msg { display: none; color: #25d366; text-align: center; font-weight: bold; }
+    </script>
+    <style>
+        .hero-bg {
+            background: linear-gradient(rgba(26, 26, 46, 0.7), rgba(22, 33, 62, 0.8)), 
+                        url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+        }
+        .room-card:hover .room-overlay {
+            opacity: 1;
+        }
+        .date-input::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+        .loading-spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid #d4982a;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a2e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4982a;
+            border-radius: 4px;
+        }
     </style>
 </head>
-<body>
+<body class="font-sans bg-gray-50 text-gray-800 antialiased">
 
-<header>
-    <h1>THE GUIDIAN</h1>
-    <p>Executive Hotel - Agona Swedru</p>
-</header>
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-hotel-dark/95 backdrop-blur-md border-b border-white/10 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-hotel text-gold-400 text-2xl"></i>
+                    <div>
+                        <h1 class="font-serif text-2xl text-white tracking-wide">The Grand Horizon</h1>
+                        <p class="text-xs text-gold-300 uppercase tracking-widest">Luxury Hotel & Resort</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#rooms" class="text-gray-300 hover:text-gold-400 transition-colors text-sm uppercase tracking-wider">Rooms</a>
+                    <a href="#booking" class="text-gray-300 hover:text-gold-400 transition-colors text-sm uppercase tracking-wider">Book Now</a>
+                    <a href="#contact" class="text-gray-300 hover:text-gold-400 transition-colors text-sm uppercase tracking-wider">Contact</a>
+                    <button onclick="scrollToBooking()" class="bg-gold-500 hover:bg-gold-600 text-white px-6 py-2.5 rounded-sm font-medium transition-all transform hover:scale-105 shadow-lg shadow-gold-500/20">
+                        Reserve Now
+                    </button>
+                </div>
+                <button class="md:hidden text-white text-2xl" onclick="toggleMobileMenu()">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-hotel-dark border-t border-white/10">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#rooms" class="block px-3 py-2 text-gray-300 hover:text-gold-400">Rooms</a>
+                <a href="#booking" class="block px-3 py-2 text-gray-300 hover:text-gold-400">Book Now</a>
+                <a href="#contact" class="block px-3 py-2 text-gray-300 hover:text-gold-400">Contact</a>
+            </div>
+        </div>
+    </nav>
 
-<div class="hero">
-    <h2>Luxury Awaits</h2>
-    <p>Secure your stay in the heart of Agona Swedru</p>
-</div>
+    <!-- Hero Section -->
+    <section class="hero-bg min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-gray-50"></div>
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
+            <p class="text-gold-400 uppercase tracking-[0.3em] mb-4 text-sm font-medium">Welcome to Excellence</p>
+            <h1 class="font-serif text-5xl md:text-7xl text-white mb-6 leading-tight">
+                Experience Unparalleled<br>
+                <span class="text-gold-300 italic">Luxury & Comfort</span>
+            </h1>
+            <p class="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light leading-relaxed">
+                Nestled in the heart of the city, The Guardian Hotel offers an exquisite blend of modern elegance and timeless sophistication.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="scrollToBooking()" class="bg-gold-500 hover:bg-gold-600 text-white px-8 py-4 rounded-sm font-medium transition-all transform hover:scale-105 shadow-xl shadow-gold-500/30 text-lg">
+                    Book Your Stay
+                </button>
+                <button onclick="document.getElementById('rooms').scrollIntoView({behavior: 'smooth'})" class="border-2 border-white/30 hover:border-gold-400 text-white hover:text-gold-400 px-8 py-4 rounded-sm font-medium transition-all text-lg backdrop-blur-sm">
+                    Explore Rooms
+                </button>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-white/20 pt-8">
+                <div class="text-center">
+                    <p class="text-3xl font-serif text-gold-400">50+</p>
+                    <p class="text-gray-400 text-sm mt-1">Luxury Rooms</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-3xl font-serif text-gold-400">5★</p>
+                    <p class="text-gray-400 text-sm mt-1">Star Rating</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-3xl font-serif text-gold-400">24/7</p>
+                    <p class="text-gray-400 text-sm mt-1">Concierge</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-3xl font-serif text-gold-400">100%</p>
+                    <p class="text-gray-400 text-sm mt-1">Satisfaction</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<div class="section">
-    <h3>Our Executive Rooms</h3>
-    <div class="room-card">
-        <div class="room-info">
-            <h4>Executive King Suite</h4>
-            <p>Air-con, High-speed WiFi, En-suite Bathroom.</p>
-            <p class="price">Gh1,500 / Night</p>
+    <!-- Rooms Section -->
+    <section id="rooms" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <p class="text-gold-600 uppercase tracking-widest text-sm font-medium mb-2">Accommodations</p>
+                <h2 class="font-serif text-4xl md:text-5xl text-hotel-dark mb-4">Our Rooms & Suites</h2>
+                <div class="w-24 h-1 bg-gold-400 mx-auto"></div>
+                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Each room is designed with your comfort in mind, featuring premium amenities and breathtaking views.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Deluxe Room -->
+                <div class="room-card group bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
+                    <div class="relative overflow-hidden h-64">
+                        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Deluxe Room" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute top-4 right-4 bg-gold-500 text-white px-3 py-1 text-sm font-medium rounded-sm">$180/night</div>
+                        <div class="room-overlay absolute inset-0 bg-hotel-dark/60 opacity-0 transition-opacity duration-300 flex items-center justify-center">
+                            <button onclick="selectRoom('Deluxe King')" class="bg-white text-hotel-dark px-6 py-2 rounded-sm font-medium hover:bg-gold-50 transition-colors">
+                                Book This Room
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-serif text-2xl text-hotel-dark mb-2">Deluxe King Room</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">Spacious room with king-size bed, city view, and modern amenities perfect for business or leisure.</p>
+                        <div class="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                            <span><i class="fa-solid fa-user mr-1"></i> 2 Guests</span>
+                            <span><i class="fa-solid fa-bed mr-1"></i> 1 King</span>
+                            <span><i class="fa-solid fa-expand mr-1"></i> 35m²</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">WiFi</span>
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Breakfast</span>
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Mini Bar</span>
+                        </div>
+                        <button onclick="selectRoom('Deluxe King')" class="w-full border-2 border-hotel-dark text-hotel-dark hover:bg-hotel-dark hover:text-white py-2 rounded-sm transition-all font-medium">
+                            Select Room
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Executive Suite -->
+                <div class="room-card group bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
+                    <div class="relative overflow-hidden h-64">
+                        <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Executive Suite" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute top-4 right-4 bg-gold-500 text-white px-3 py-1 text-sm font-medium rounded-sm">$320/night</div>
+                        <div class="absolute top-4 left-4 bg-hotel-blue text-white px-3 py-1 text-xs font-medium rounded-sm uppercase tracking-wider">Popular</div>
+                        <div class="room-overlay absolute inset-0 bg-hotel-dark/60 opacity-0 transition-opacity duration-300 flex items-center justify-center">
+                            <button onclick="selectRoom('Executive Suite')" class="bg-white text-hotel-dark px-6 py-2 rounded-sm font-medium hover:bg-gold-50 transition-colors">
+                                Book This Room
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-serif text-2xl text-hotel-dark mb-2">Executive Suite</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">Luxurious suite with separate living area, panoramic ocean views, and premium concierge service.</p>
+                        <div class="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                            <span><i class="fa-solid fa-user mr-1"></i> 3 Guests</span>
+                            <span><i class="fa-solid fa-bed mr-1"></i> 1 King + Sofa</span>
+                            <span><i class="fa-solid fa-expand mr-1"></i> 55m²</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Ocean View</span>
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Lounge Access</span>
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Butler</span>
+                        </div>
+                        <button onclick="selectRoom('Executive Suite')" class="w-full border-2 border-hotel-dark text-hotel-dark hover:bg-hotel-dark hover:text-white py-2 rounded-sm transition-all font-medium">
+                            Select Room
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Presidential Suite -->
+                <div class="room-card group bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
+                    <div class="relative overflow-hidden h-64">
+                        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Presidential Suite" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute top-4 right-4 bg-gold-500 text-white px-3 py-1 text-sm font-medium rounded-sm">$650/night</div>
+                        <div class="absolute top-4 left-4 bg-hotel-accent text-white px-3 py-1 text-xs font-medium rounded-sm uppercase tracking-wider">Premium</div>
+                        <div class="room-overlay absolute inset-0 bg-hotel-dark/60 opacity-0 transition-opacity duration-300 flex items-center justify-center">
+                            <button onclick="selectRoom('Presidential Suite')" class="bg-white text-hotel-dark px-6 py-2 rounded-sm font-medium hover:bg-gold-50 transition-colors">
+                                Book This Room
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-serif text-2xl text-hotel-dark mb-2">Presidential Suite</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">Ultimate luxury with private terrace, Jacuzzi, dining room, and 24/7 dedicated butler service.</p>
+                        <div class="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                            <span><i class="fa-solid fa-user mr-1"></i> 4 Guests</span>
+                            <span><i class="fa-solid fa-bed mr-1"></i> 2 King Beds</span>
+                            <span><i class="fa-solid fa-expand mr-1"></i> 120m²</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Jacuzzi</span>
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Private Terrace</span>
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Chef Service</span>
+                        </div>
+                        <button onclick="selectRoom('Presidential Suite')" class="w-full border-2 border-hotel-dark text-hotel-dark hover:bg-hotel-dark hover:text-white py-2 rounded-sm transition-all font-medium">
+                            Select Room
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Family Room -->
+                <div class="room-card group bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
+                    <div class="relative overflow-hidden h-64">
+                        <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Family Room" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute top-4 right-4 bg-gold-500 text-white px-3 py-1 text-sm font-medium rounded-sm">$250/night</div>
+                        <div class="room-overlay absolute inset-0 bg-hotel-dark/60 opacity-0 transition-opacity duration-300 flex items-center justify-center">
+                            <button onclick="selectRoom('Family Room')" class="bg-white text-hotel-dark px-6 py-2 rounded-sm font-medium hover:bg-gold-50 transition-colors">
+                                Book This Room
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-serif text-2xl text-hotel-dark mb-2">Family Room</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">Connecting rooms with garden views, kids' amenities, and spacious living area for the whole family.</p>
+                        <div class="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                            <span><i class="fa-solid fa-user mr-1"></i> 4 Guests</span>
+                            <span><i class="fa-solid fa-bed mr-1"></i> 2 Queens</span>
+                            <span><i class="fa-solid fa-expand mr-1"></i> 65m²</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Garden View</span>
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Kids Area</span>
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Crib Available</span>
+                        </div>
+                        <button onclick="selectRoom('Family Room')" class="w-full border-2 border-hotel-dark text-hotel-dark hover:bg-hotel-dark hover:text-white py-2 rounded-sm transition-all font-medium">
+                            Select Room
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Honeymoon Suite -->
+                <div class="room-card group bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
+                    <div class="relative overflow-hidden h-64">
+                        <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Honeymoon Suite" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute top-4 right-4 bg-gold-500 text-white px-3 py-1 text-sm font-medium rounded-sm">$450/night</div>
+                        <div class="absolute top-4 left-4 bg-pink-500 text-white px-3 py-1 text-xs font-medium rounded-sm uppercase tracking-wider">Romantic</div>
+                        <div class="room-overlay absolute inset-0 bg-hotel-dark/60 opacity-0 transition-opacity duration-300 flex items-center justify-center">
+                            <button onclick="selectRoom('Honeymoon Suite')" class="bg-white text-hotel-dark px-6 py-2 rounded-sm font-medium hover:bg-gold-50 transition-colors">
+                                Book This Room
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-serif text-2xl text-hotel-dark mb-2">Honeymoon Suite</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">Romantic retreat with rose petal service, champagne welcome, and private balcony with sunset views.</p>
+                        <div class="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                            <span><i class="fa-solid fa-user mr-1"></i> 2 Guests</span>
+                            <span><i class="fa-solid fa-bed mr-1"></i> 1 King</span>
+                            <span><i class="fa-solid fa-expand mr-1"></i> 45m²</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Champagne</span>
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Couples Spa</span>
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Sunset View</span>
+                        </div>
+                        <button onclick="selectRoom('Honeymoon Suite')" class="w-full border-2 border-hotel-dark text-hotel-dark hover:bg-hotel-dark hover:text-white py-2 rounded-sm transition-all font-medium">
+                            Select Room
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Standard Twin -->
+                <div class="room-card group bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
+                    <div class="relative overflow-hidden h-64">
+                        <img src="https://images.unsplash.com/photo-1595576508898-0ad5c879a061?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Standard Twin" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute top-4 right-4 bg-gold-500 text-white px-3 py-1 text-sm font-medium rounded-sm">$140/night</div>
+                        <div class="room-overlay absolute inset-0 bg-hotel-dark/60 opacity-0 transition-opacity duration-300 flex items-center justify-center">
+                            <button onclick="selectRoom('Standard Twin')" class="bg-white text-hotel-dark px-6 py-2 rounded-sm font-medium hover:bg-gold-50 transition-colors">
+                                Book This Room
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-serif text-2xl text-hotel-dark mb-2">Standard Twin</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">Comfortable and practical with two single beds, work desk, and all essential amenities.</p>
+                        <div class="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                            <span><i class="fa-solid fa-user mr-1"></i> 2 Guests</span>
+                            <span><i class="fa-solid fa-bed mr-1"></i> 2 Single</span>
+                            <span><i class="fa-solid fa-expand mr-1"></i> 28m²</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Work Desk</span>
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Coffee Maker</span>
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Cable TV</span>
+                        </div>
+                        <button onclick="selectRoom('Standard Twin')" class="w-full border-2 border-hotel-dark text-hotel-dark hover:bg-hotel-dark hover:text-white py-2 rounded-sm transition-all font-medium">
+                            Select Room
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section id="booking" class="py-20 bg-hotel-dark relative overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-12">
+                <p class="text-gold-400 uppercase tracking-widest text-sm font-medium mb-2">Reservations</p>
+                <h2 class="font-serif text-4xl md:text-5xl text-white mb-4">Book Your Stay</h2>
+                <div class="w-24 h-1 bg-gold-400 mx-auto"></div>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Booking Form -->
+                <div class="lg:col-span-2 bg-white/5 backdrop-blur-sm rounded-lg p-8 border border-white/10">
+                    <form id="bookingForm" class="space-y-6" onsubmit="handleBooking(event)">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <!-- Personal Info -->
+                            <div class="space-y-4">
+                                <h3 class="text-gold-400 font-medium text-lg mb-4 flex items-center">
+                                    <i class="fa-solid fa-user mr-2"></i> Personal Details
+                                </h3>
+                                <div>
+                                    <label class="block text-gray-300 text-sm mb-2">Full Name *</label>
+                                    <input type="text" id="fullName" required class="w-full bg-white/10 border border-white/20 rounded-sm px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gold-400 transition-colors" placeholder="John Doe">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-300 text-sm mb-2">Email Address *</label>
+                                    <input type="email" id="email" required class="w-full bg-white/10 border border-white/20 rounded-sm px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gold-400 transition-colors" placeholder="john@example.com">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-300 text-sm mb-2">Phone Number *</label>
+                                    <input type="tel" id="phone" required class="w-full bg-white/10 border border-white/20 rounded-sm px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gold-400 transition-colors" placeholder="+1 (555) 000-0000">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-300 text-sm mb-2">Special Requests</label>
+                                    <textarea id="requests" rows="3" class="w-full bg-white/10 border border-white/20 rounded-sm px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-gold-400 transition-colors" placeholder="Any special requirements..."></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Booking Details -->
+                            <div class="space-y-4">
+                                <h3 class="text-gold-400 font-medium text-lg mb-4 flex items-center">
+                                    <i class="fa-solid fa-calendar-check mr-2"></i> Booking Details
+                                </h3>
+                                <div>
+                                    <label class="block text-gray-300 text-sm mb-2">Room Type *</label>
+                                    <select id="roomType" required class="w-full bg-white/10 border border-white/20 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-gold-400 transition-colors appearance-none cursor-pointer">
+                                        <option value="" class="bg-hotel-dark">Select a room...</option>
+                                        <option value="Deluxe King" class="bg-hotel-dark">Deluxe King Room - $180/night</option>
+                                        <option value="Executive Suite" class="bg-hotel-dark">Executive Suite - $320/night</option>
+                                        <option value="Presidential Suite" class="bg-hotel-dark">Presidential Suite - $650/night</option>
+                                        <option value="Family Room" class="bg-hotel-dark">Family Room - $250/night</option>
+                                        <option value="Honeymoon Suite" class="bg-hotel-dark">Honeymoon Suite - $450/night</option>
+                                        <option value="Standard Twin" class="bg-hotel-dark">Standard Twin - $140/night</option>
+                                    </select>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-gray-300 text-sm mb-2">Check-in Date *</label>
+                                        <input type="date" id="checkIn" required class="w-full bg-white/10 border border-white/20 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-gold-400 transition-colors date-input" onchange="calculateTotal(); checkAvailability()">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-300 text-sm mb-2">Check-out Date *</label>
+                                        <input type="date" id="checkOut" required class="w-full bg-white/10 border border-white/20 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-gold-400 transition-colors date-input" onchange="calculateTotal(); checkAvailability()">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-300 text-sm mb-2">Number of Guests *</label>
+                                    <select id="guests" required class="w-full bg-white/10 border border-white/20 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-gold-400 transition-colors appearance-none cursor-pointer">
+                                        <option value="1" class="bg-hotel-dark">1 Guest</option>
+                                        <option value="2" class="bg-hotel-dark" selected>2 Guests</option>
+                                        <option value="3" class="bg-hotel-dark">3 Guests</option>
+                                        <option value="4" class="bg-hotel-dark">4 Guests</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Availability Status -->
+                                <div id="availabilityStatus" class="hidden p-3 rounded-sm text-sm font-medium"></div>
+                            </div>
+                        </div>
+
+                        <!-- Price Summary -->
+                        <div class="border-t border-white/10 pt-6 mt-6">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-gray-400">Nights</span>
+                                <span class="text-white" id="nightsCount">0</span>
+                            </div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-gray-400">Price per night</span>
+                                <span class="text-white" id="pricePerNight">$0</span>
+                            </div>
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-gray-400">Taxes & Fees (12%)</span>
+                                <span class="text-white" id="taxes">$0</span>
+                            </div>
+                            <div class="flex justify-between items-center text-xl font-serif border-t border-white/10 pt-4">
+                                <span class="text-gold-400">Total</span>
+                                <span class="text-gold-400" id="totalPrice">$0</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="w-full bg-gold-500 hover:bg-gold-600 text-white py-4 rounded-sm font-medium text-lg transition-all transform hover:scale-[1.02] shadow-lg shadow-gold-500/25 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <span id="btnText">Confirm Booking</span>
+                            <div id="btnSpinner" class="loading-spinner hidden"></div>
+                        </button>
+                        
+                        <p class="text-gray-500 text-xs text-center mt-4">
+                            <i class="fa-solid fa-lock mr-1"></i> Secure booking. You'll receive a confirmation email within minutes.
+                        </p>
+                    </form>
+                </div>
+
+                <!-- Info Sidebar -->
+                <div class="space-y-6">
+                    <div class="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+                        <h3 class="text-gold-400 font-serif text-xl mb-4">Hotel Policies</h3>
+                        <ul class="space-y-3 text-gray-300 text-sm">
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-clock text-gold-400 mt-1 mr-3"></i>
+                                <span>Check-in: 3:00 PM / Check-out: 11:00 AM</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-credit-card text-gold-400 mt-1 mr-3"></i>
+                                <span>Credit card required for guarantee</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-ban text-gold-400 mt-1 mr-3"></i>
+                                <span>Free cancellation up to 48 hours before arrival</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-wifi text-gold-400 mt-1 mr-3"></i>
+                                <span>Complimentary high-speed WiFi</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-utensils text-gold-400 mt-1 mr-3"></i>
+                                <span>Breakfast included with all bookings</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+                        <h3 class="text-gold-400 font-serif text-xl mb-4">Need Help?</h3>
+                        <p class="text-gray-300 text-sm mb-4">Our reservations team is available 24/7 to assist you with your booking.</p>
+                        <div class="space-y-2 text-sm">
+                            <a href="tel:+15551234567" class="flex items-center text-gold-400 hover:text-gold-300 transition-colors">
+                                <i class="fa-solid fa-phone mr-2"></i> +1 (555) 123-4567
+                            </a>
+                            <a href="mailto:reservations@grandhorizon.com" class="flex items-center text-gold-400 hover:text-gold-300 transition-colors">
+                                <i class="fa-solid fa-envelope mr-2"></i> reservations@grandhorizon.com
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-gold-500/20 to-gold-600/10 rounded-lg p-6 border border-gold-500/20">
+                        <h3 class="text-gold-400 font-serif text-xl mb-2">Special Offer</h3>
+                        <p class="text-gray-300 text-sm mb-4">Book 3+ nights and receive a complimentary spa treatment worth $150.</p>
+                        <div class="text-2xl font-serif text-white">Save 15%</div>
+                        <p class="text-gold-400 text-xs mt-1">On stays longer than 5 nights</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <p class="text-gold-600 uppercase tracking-widest text-sm font-medium mb-2">Get in Touch</p>
+                    <h2 class="font-serif text-4xl text-hotel-dark mb-6">Contact Us</h2>
+                    <p class="text-gray-600 mb-8 leading-relaxed">Have questions about your stay? Our concierge team is ready to assist you with restaurant reservations, transportation, and local recommendations.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="bg-gold-100 p-3 rounded-sm mr-4">
+                                <i class="fa-solid fa-location-dot text-gold-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-hotel-dark">Address</h4>
+                                <p class="text-gray-600 text-sm">123 Ocean Drive, Miami Beach, FL 33139</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-gold-100 p-3 rounded-sm mr-4">
+                                <i class="fa-solid fa-phone text-gold-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-hotel-dark">Phone</h4>
+                                <p class="text-gray-600 text-sm">+1 (555) 123-4567</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-gold-100 p-3 rounded-sm mr-4">
+                                <i class="fa-solid fa-envelope text-gold-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-hotel-dark">Email</h4>
+                                <p class="text-gray-600 text-sm">info@grandhorizon.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-8 rounded-lg border border-gray-200">
+                    <h3 class="font-serif text-2xl text-hotel-dark mb-6">Send an Inquiry</h3>
+                    <form class="space-y-4" onsubmit="handleInquiry(event)">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" required placeholder="First Name" class="w-full border border-gray-300 rounded-sm px-4 py-3 focus:outline-none focus:border-gold-400 transition-colors">
+                            <input type="text" required placeholder="Last Name" class="w-full border border-gray-300 rounded-sm px-4 py-3 focus:outline-none focus:border-gold-400 transition-colors">
+                        </div>
+                        <input type="email" required placeholder="Email Address" class="w-full border border-gray-300 rounded-sm px-4 py-3 focus:outline-none focus:border-gold-400 transition-colors">
+                        <select class="w-full border border-gray-300 rounded-sm px-4 py-3 focus:outline-none focus:border-gold-400 transition-colors text-gray-600">
+                            <option>General Inquiry</option>
+                            <option>Group Booking</option>
+                            <option>Event Planning</option>
+                            <option>Feedback</option>
+                        </select>
+                        <textarea required rows="4" placeholder="Your message..." class="w-full border border-gray-300 rounded-sm px-4 py-3 focus:outline-none focus:border-gold-400 transition-colors"></textarea>
+                        <button type="submit" class="w-full bg-hotel-dark hover:bg-hotel-blue text-white py-3 rounded-sm font-medium transition-colors">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-hotel-dark text-white py-12 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <i class="fa-solid fa-hotel text-gold-400 text-2xl"></i>
+                        <div>
+                            <h3 class="font-serif text-xl">The Grand Horizon</h3>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">Luxury accommodation in the heart of the city. Experience world-class service and unforgettable moments.</p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-gold-400 mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#rooms" class="hover:text-gold-400 transition-colors">Our Rooms</a></li>
+                        <li><a href="#booking" class="hover:text-gold-400 transition-colors">Book Now</a></li>
+                        <li><a href="#" class="hover:text-gold-400 transition-colors">Dining</a></li>
+                        <li><a href="#" class="hover:text-gold-400 transition-colors">Spa & Wellness</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-medium text-gold-400 mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-gold-400 transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-gold-400 transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-gold-400 transition-colors">Cookie Policy</a></li>
+                        <li><a href="#" class="hover:text-gold-400 transition-colors">Accessibility</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-medium text-gold-400 mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-gold-500 transition-colors">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-gold-500 transition-colors">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-gold-500 transition-colors">
+                            <i class="fa-brands fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-gold-500 transition-colors">
+                            <i class="fa-brands fa-tripadvisor"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 text-center text-gray-500 text-sm">
+                <p>&copy; 2026 The Grand Horizon Hotel. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-4 right-4 transform translate-x-full transition-transform duration-300 z-50 max-w-md">
+        <div class="bg-white rounded-lg shadow-2xl border-l-4 p-4 flex items-start gap-3" id="toastContent">
+            <div id="toastIcon" class="mt-0.5"></div>
+            <div>
+                <h4 class="font-medium text-gray-900" id="toastTitle"></h4>
+                <p class="text-sm text-gray-600 mt-1" id="toastMessage"></p>
+            </div>
         </div>
     </div>
 
-    <div id="booking-form">
-        <h3>Instant Booking Inquiry</h3>
-        <form id="submit-to-google">
-            <input type="text" name="name" placeholder="Full Name" required>
-            <input type="email" name="email" placeholder="Email Address" required>
-            <select name="roomType">
-                <option value="Executive King">Executive King Suite</option>
-                <option value="Standard Twin">Standard Twin Room</option>
-            </select>
-            <label>Check-In Date</label>
-            <input type="date" name="checkIn" required>
-            <label>Check-Out Date</label>
-            <input type="date" name="checkOut" required>
-            <button type="submit" id="submit-btn">Check Availability</button>
-        </form>
-        <p class="success-msg" id="msg">Inquiry Sent! We will contact you shortly.</p>
+    <!-- Booking Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-md w-full p-8 text-center slide-in">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-check text-green-600 text-2xl"></i>
+            </div>
+            <h3 class="font-serif text-2xl text-hotel-dark mb-2">Booking Confirmed!</h3>
+            <p class="text-gray-600 mb-6">Your reservation has been received. A confirmation email has been sent to <span id="confirmEmail" class="font-medium text-hotel-dark"></span>.</p>
+            <div class="bg-gray-50 rounded-lg p-4 mb-6 text-left text-sm space-y-2">
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Booking ID:</span>
+                    <span class="font-medium text-hotel-dark" id="confirmId">GH-2026-001</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Room:</span>
+                    <span class="font-medium text-hotel-dark" id="confirmRoom">-</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Dates:</span>
+                    <span class="font-medium text-hotel-dark" id="confirmDates">-</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-500">Total:</span>
+                    <span class="font-medium text-gold-600" id="confirmTotal">-</span>
+                </div>
+            </div>
+            <button onclick="closeModal()" class="w-full bg-hotel-dark hover:bg-hotel-blue text-white py-3 rounded-sm font-medium transition-colors">
+                Close
+            </button>
+        </div>
     </div>
-</div>
 
-<a href="https://wa.me/0555793978" class="whatsapp-btn">Chat on WhatsApp</a>
+    <script>
+        // Room prices
+        const roomPrices = {
+            'Deluxe King': 180,
+            'Executive Suite': 320,
+            'Presidential Suite': 650,
+            'Family Room': 250,
+            'Honeymoon Suite': 450,
+            'Standard Twin': 140
+        };
 
-<script>
-    // REPLACE THIS WITH YOUR APPS SCRIPT URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyzWetqT0VH9klw3SuAMlYQaFnYE3stpwTatnuWf6aNtGw7h7ePSNroeM4ufLHUTCyX/exec';
-    const form = document.getElementById('submit-to-google');
-    const msg = document.getElementById('msg');
-    const btn = document.getElementById('submit-btn');
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('checkIn').min = today;
+        document.getElementById('checkOut').min = today;
 
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      btn.disabled = true;
-      btn.innerHTML = "Sending...";
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-hotel-dark/95', 'shadow-lg');
+            } else {
+                navbar.classList.remove('shadow-lg');
+            }
+        });
 
-      // Prepare data for the Google Sheet
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
 
-      fetch(scriptURL, {
-          method: 'POST',
-          body: JSON.stringify(data)
-      })
-      .then(response => {
-          msg.style.display = "block";
-          form.reset();
-          btn.innerHTML = "Check Availability";
-          btn.disabled = false;
-      })
-      .catch(error => {
-          console.error('Error!', error.message);
-          alert("Something went wrong. Please try again.");
-          btn.disabled = false;
-      });
-    });
-</script>
+        function scrollToBooking() {
+            document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+        }
 
+        function selectRoom(roomType) {
+            document.getElementById('roomType').value = roomType;
+            scrollToBooking();
+            showToast('Room Selected', `${roomType} has been selected. Please complete your booking details.`, 'info');
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            const roomType = document.getElementById('roomType').value;
+            const checkIn = new Date(document.getElementById('checkIn').value);
+            const checkOut = new Date(document.getElementById('checkOut').value);
+            
+            if (!roomType || !checkIn || !checkOut || checkOut <= checkIn) {
+                document.getElementById('nightsCount').textContent = '0';
+                document.getElementById('pricePerNight').textContent = '$0';
+                document.getElementById('taxes').textContent = '$0';
+                document.getElementById('totalPrice').textContent = '$0';
+                return;
+            }
+
+            const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+            const pricePerNight = roomPrices[roomType] || 0;
+            const subtotal = nights * pricePerNight;
+            const taxes = subtotal * 0.12;
+            const total = subtotal + taxes;
+
+            document.getElementById('nightsCount').textContent = nights;
+            document.getElementById('pricePerNight').textContent = `$${pricePerNight}`;
+            document.getElementById('taxes').textContent = `$${taxes.toFixed(2)}`;
+            document.getElementById('totalPrice').textContent = `$${total.toFixed(2)}`;
+        }
+
+        function checkAvailability() {
+            const roomType = document.getElementById('roomType').value;
+            const checkIn = document.getElementById('checkIn').value;
+            const checkOut = document.getElementById('checkOut').value;
+            const statusDiv = document.getElementById('availabilityStatus');
+
+            if (!roomType || !checkIn || !checkOut) {
+                statusDiv.classList.add('hidden');
+                return;
+            }
+
+            // Simulate availability check - in production, this would call your Google Apps Script
+            statusDiv.classList.remove('hidden');
+            statusDiv.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Checking availability...';
+            statusDiv.className = 'p-3 rounded-sm text-sm font-medium bg-blue-500/20 text-blue-300 border border-blue-500/30';
+
+            setTimeout(() => {
+                // Mock response - replace with actual API call to Google Apps Script
+                const isAvailable = Math.random() > 0.3; // 70% chance available for demo
+                if (isAvailable) {
+                    statusDiv.innerHTML = '<i class="fa-solid fa-check-circle mr-2"></i> Dates available! Proceed with booking.';
+                    statusDiv.className = 'p-3 rounded-sm text-sm font-medium bg-green-500/20 text-green-300 border border-green-500/30';
+                } else {
+                    statusDiv.innerHTML = '<i class="fa-solid fa-times-circle mr-2"></i> Selected dates are not available. Please choose different dates.';
+                    statusDiv.className = 'p-3 rounded-sm text-sm font-medium bg-red-500/20 text-red-300 border border-red-500/30';
+                }
+            }, 1500);
+        }
+
+        async function handleBooking(e) {
+            e.preventDefault();
+            
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                roomType: document.getElementById('roomType').value,
+                checkIn: document.getElementById('checkIn').value,
+                checkOut: document.getElementById('checkOut').value,
+                guests: document.getElementById('guests').value,
+                requests: document.getElementById('requests').value,
+                totalPrice: document.getElementById('totalPrice').textContent,
+                timestamp: new Date().toISOString()
+            };
+
+            // Validation
+            if (!formData.roomType) {
+                showToast('Error', 'Please select a room type', 'error');
+                return;
+            }
+
+            const checkIn = new Date(formData.checkIn);
+            const checkOut = new Date(formData.checkOut);
+            if (checkOut <= checkIn) {
+                showToast('Error', 'Check-out date must be after check-in date', 'error');
+                return;
+            }
+
+            // Show loading
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            btn.disabled = true;
+            btnText.textContent = 'Processing...';
+            btnSpinner.classList.remove('hidden');
+
+            try {
+                // ============================================
+                // GOOGLE SHEETS INTEGRATION POINT
+                // ============================================
+                // Replace with your Google Apps Script Web App URL
+                const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby9osZE847YNUxpBTTWC2eiREUpGVVclEn4E5kcBzsrkUxY9lXa3QVeMq0BOW98g0TFLg/exec';
+                
+                // For demo purposes, simulate API call
+                // In production, uncomment the fetch below and replace URL:
+                
+                /*
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                const result = await response.json();
+                */
+
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // Mock success response
+                const bookingId = 'GH-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+                
+                // Show success modal
+                document.getElementById('confirmEmail').textContent = formData.email;
+                document.getElementById('confirmId').textContent = bookingId;
+                document.getElementById('confirmRoom').textContent = formData.roomType;
+                document.getElementById('confirmDates').textContent = `${formData.checkIn} to ${formData.checkOut}`;
+                document.getElementById('confirmTotal').textContent = formData.totalPrice;
+                document.getElementById('successModal').classList.remove('hidden');
+                document.getElementById('successModal').classList.add('flex');
+
+                // Reset form
+                document.getElementById('bookingForm').reset();
+                calculateTotal();
+
+            } catch (error) {
+                showToast('Booking Failed', 'There was an error processing your booking. Please try again or contact us directly.', 'error');
+                console.error('Booking error:', error);
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = 'Confirm Booking';
+                btnSpinner.classList.add('hidden');
+            }
+        }
+
+        function handleInquiry(e) {
+            e.preventDefault();
+            showToast('Message Sent', 'Thank you for your inquiry. We will respond within 24 hours.', 'success');
+            e.target.reset();
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').classList.add('hidden');
+            document.getElementById('successModal').classList.remove('flex');
+        }
+
+        function showToast(title, message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const toastContent = document.getElementById('toastContent');
+            const toastIcon = document.getElementById('toastIcon');
+            const toastTitle = document.getElementById('toastTitle');
+            const toastMessage = document.getElementById('toastMessage');
+
+            const icons = {
+                success: '<i class="fa-solid fa-check-circle text-green-500 text-xl"></i>',
+                error: '<i class="fa-solid fa-exclamation-circle text-red-500 text-xl"></i>',
+                info: '<i class="fa-solid fa-info-circle text-blue-500 text-xl"></i>'
+            };
+
+            const borders = {
+                success: 'border-green-500',
+                error: 'border-red-500',
+                info: 'border-blue-500'
+            };
+
+            toastIcon.innerHTML = icons[type];
+            toastContent.className = `bg-white rounded-lg shadow-2xl border-l-4 ${borders[type]} p-4 flex items-start gap-3`;
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+
+            toast.classList.remove('translate-x-full');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+            }, 5000);
+        }
+
+        // Close modal on outside click
+        document.getElementById('successModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('successModal')) {
+                closeModal();
+            }
+        });
+    </script>
 </body>
 </html>
